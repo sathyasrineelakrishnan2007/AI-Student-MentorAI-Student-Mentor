@@ -1,0 +1,37 @@
+
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "AI Student Mentor Backend is Running!"
+
+@app.route("/recommend", methods=["POST"])
+def recommend():
+    data = request.get_json()
+
+    subjects = data.get("subjects", [])
+    pending_tasks = data.get("pending_tasks", [])
+
+    if not subjects:
+        message = "Add subjects to get study recommendations."
+
+    elif pending_tasks:
+        message = (
+            "Focus on completing your pending task: "
+            + pending_tasks[0]
+        )
+
+    else:
+        message = (
+            "Revise " + subjects[0]
+            + " and practice questions regularly."
+        )
+
+    return jsonify({
+        "recommendation": message
+    })
+
+if __name__ == "__main__":
+    app.run(debug=True)
